@@ -1,6 +1,6 @@
 import type { PlanEntry } from '@agentclientprotocol/sdk';
 import { ChevronDown } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { defineMessages, useIntl } from '../i18n';
 import { cn } from '../utils';
 import { completedTodoCount, currentTodo } from '../utils/todoPlan';
@@ -22,7 +22,7 @@ export default function TodoDock({ entries }: { entries: PlanEntry[] }) {
   const signature = useMemo(() => JSON.stringify(entries), [entries]);
   const previousSignature = useRef('');
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const entriesChanged = signature !== previousSignature.current;
     if (entriesChanged) {
       previousSignature.current = signature;

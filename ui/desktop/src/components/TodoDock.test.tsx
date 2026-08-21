@@ -3,6 +3,7 @@
  */
 import type { PlanEntry } from '@agentclientprotocol/sdk';
 import { act, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { IntlTestWrapper } from '../i18n/test-utils';
 import TodoDock from './TodoDock';
@@ -28,6 +29,25 @@ describe('TodoDock', () => {
     expect(screen.getByRole('button', { name: 'Expand task list' })).toBeVisible();
     expect(container.firstElementChild).toHaveAttribute('aria-hidden', 'false');
     expect(container.firstElementChild).not.toHaveAttribute('inert');
+  });
+
+  it('can expand immediately when the first plan arrives', async () => {
+    const user = userEvent.setup();
+    const { container, rerender } = render(<TodoDock entries={[]} />, {
+      wrapper: IntlTestWrapper,
+    });
+
+    rerender(<TodoDock entries={incompletePlan} />);
+
+    const expandButton = screen.getByRole('button', { name: 'Expand task list' });
+    expect(container.firstElementChild).not.toHaveAttribute('inert');
+    await user.click(expandButton);
+
+    expect(screen.getByRole('button', { name: 'Collapse task list' })).toHaveAttribute(
+      'aria-expanded',
+      'true'
+    );
+    expect(screen.getByText('Continue restored work')).toBeVisible();
   });
 
   it('makes the dock inert after a completed plan is dismissed', () => {

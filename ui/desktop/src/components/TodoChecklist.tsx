@@ -42,7 +42,7 @@ export default function TodoChecklist({
               className={cn(
                 'mt-0.5 size-3.5 shrink-0',
                 completed && 'text-text-secondary',
-                inProgress && 'text-text-primary animate-pulse motion-reduce:animate-none',
+                inProgress && 'text-text-primary animate-spin motion-reduce:animate-none',
                 !completed && !inProgress && 'text-text-secondary/70'
               )}
             />

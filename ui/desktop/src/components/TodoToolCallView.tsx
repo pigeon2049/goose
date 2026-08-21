@@ -1,4 +1,4 @@
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ListTodo } from 'lucide-react';
 import { useState } from 'react';
 import { defineMessages, useIntl } from '../i18n';
 import { cn } from '../utils';
@@ -42,7 +42,7 @@ export default function TodoToolCallView({
     <div className="w-full text-sm font-sans">
       <button
         type="button"
-        className="group flex min-h-8 w-full items-center gap-2 rounded-md py-1 text-left hover:bg-background-secondary/60"
+        className="group flex min-h-10 w-full items-center gap-2.5 px-3 py-2 text-left transition-colors hover:bg-background-secondary/60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-border-primary"
         onClick={() => entries.length > 0 && setExpanded((value) => !value)}
         aria-expanded={entries.length > 0 ? expanded : undefined}
         aria-label={
@@ -53,9 +53,17 @@ export default function TodoToolCallView({
             : undefined
         }
       >
+        <ListTodo
+          aria-hidden="true"
+          className={cn(
+            'size-4 shrink-0 text-text-secondary',
+            status === 'loading' && 'tool-call-name-loading',
+            status === 'error' && 'text-text-danger'
+          )}
+        />
         <span
           className={cn(
-            'min-w-0 flex-1 truncate',
+            'min-w-0 flex-1 truncate font-medium',
             status === 'loading' && 'tool-call-name-loading',
             status === 'error' && 'text-text-danger'
           )}
@@ -65,13 +73,18 @@ export default function TodoToolCallView({
         {entries.length > 0 && (
           <ChevronDown
             className={cn(
-              'size-4 shrink-0 text-text-secondary transition-transform',
+              'size-4 shrink-0 text-text-secondary transition-transform group-hover:text-text-primary',
               expanded && 'rotate-180'
             )}
           />
         )}
       </button>
-      {expanded && <TodoChecklist entries={entries} className="px-2 pb-2 pt-1" />}
+      {expanded && (
+        <TodoChecklist
+          entries={entries}
+          className="border-t border-border-primary bg-background-secondary/20 px-3 py-2.5"
+        />
+      )}
     </div>
   );
 }
